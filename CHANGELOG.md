@@ -13,6 +13,8 @@
 - Replace Commons Lang 2 with the platform-bundled Commons Lang 3
 - Drop the `until-build` bound so the plugins stay installable across future IDE updates,
   as recommended for platform 243 and later
+- Indexes are no longer rebuilt wholesale after a plugin update; each index is rebuilt when
+  its own version is bumped, which is what the platform provides for that purpose
 
 ### Deprecated
 

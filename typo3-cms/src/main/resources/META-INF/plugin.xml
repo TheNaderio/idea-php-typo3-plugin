@@ -41,7 +41,6 @@
         <postStartupActivity implementation="com.cedricziel.idea.typo3.startup.TYPO3CMSPostStartupActivity"/>
         <postStartupActivity implementation="com.cedricziel.idea.typo3.startup.XLFFFileTypePostStartupActivity"/>
 
-        <projectService serviceImplementation="com.cedricziel.idea.typo3.TYPO3CMSSettings"/>
         <projectService serviceImplementation="com.cedricziel.idea.typo3.TYPO3CMSProjectSettings"/>
 
         <projectConfigurable displayName="TYPO3 CMS"
