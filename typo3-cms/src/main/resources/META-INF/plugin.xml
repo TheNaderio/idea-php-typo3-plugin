@@ -54,9 +54,6 @@
 
         <spellchecker.bundledDictionaryProvider implementation="com.cedricziel.idea.typo3.TYPO3DictionaryProvider"/>
 
-        <directoryProjectGenerator implementation="com.cedricziel.idea.typo3.projectTemplate.TYPO3CMSClassicLayoutDirectoryProjectGenerator"/>
-        <projectTemplatesFactory implementation="com.cedricziel.idea.typo3.projectTemplate.TYPO3CMSProjectTemplatesFactory"/>
-
         <!-- indexes -->
         <fileBasedIndex implementation="com.cedricziel.idea.typo3.index.CoreServiceMapStubIndex"/>
         <fileBasedIndex implementation="com.cedricziel.idea.typo3.index.ExtensionNameStubIndex"/>

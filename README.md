@@ -47,9 +47,6 @@ On PhpStorm or IntelliJ:
 * **Experimental:** Generate Fluid Styled Content Element (please report bugs!)
 * Generate ViewHelpers
 * Generate ActionControllers
-* Create TYPO3 Projects from sketch
-  * classic layout (through [https://github.com/TYPO3/TYPO3.CMS](https://github.com/TYPO3/TYPO3.CMS))
-  * composer based project through [https://github.com/TYPO3/TYPO3.CMS.BaseDistribution](https://github.com/TYPO3/TYPO3.CMS.BaseDistribution)
 
 ## Development and Contribution
 

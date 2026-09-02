@@ -17,6 +17,10 @@
 ### Deprecated
 
 ### Removed
+- The "New Project" wizard for TYPO3 projects (classic and composer based layout). It relied
+  on `AbstractGithubTagDownloadedProjectGenerator` and `ProjectTemplatesFactory`, neither of
+  which offers a compatible API any more. Use the TYPO3 base distribution via Composer
+  instead.
 
 ### Fixed
 - `GeneralUtility::makeInstanceService` type resolution no longer breaks in PhpStorm: the
