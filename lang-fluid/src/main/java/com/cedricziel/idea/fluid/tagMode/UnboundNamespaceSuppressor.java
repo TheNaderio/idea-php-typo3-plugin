@@ -6,7 +6,7 @@ import com.intellij.codeInspection.InspectionSuppressor;
 import com.intellij.codeInspection.SuppressQuickFix;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.xml.XmlTokenImpl;
-import com.intellij.psi.xml.XmlElementType;
+import com.intellij.psi.xml.XmlTokenType;
 import com.intellij.psi.xml.XmlTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +24,7 @@ public class UnboundNamespaceSuppressor implements InspectionSuppressor {
             return false;
         }
 
-        if (!(element instanceof XmlTokenImpl) || !((XmlTokenImpl) element).getElementType().equals(XmlElementType.XML_NAME)) {
+        if (!(element instanceof XmlTokenImpl) || !((XmlTokenImpl) element).getElementType().equals(XmlTokenType.XML_NAME)) {
             return false;
         }
 
