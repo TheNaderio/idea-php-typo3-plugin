@@ -4,7 +4,7 @@ import com.cedricziel.idea.fluid.viewHelpers.model.ViewHelper;
 import com.intellij.lang.documentation.AbstractDocumentationProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.xml.XmlTag;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
