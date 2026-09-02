@@ -52,6 +52,8 @@
              registers its own page too; without it the page lands at the top level. -->
         <projectConfigurable groupId="language"
                              id="editor.preferences.fluidOptions"
+                             bundle="messages.FluidBundle"
+                             key="fl.pages.options.title"
                              provider="com.cedricziel.idea.fluid.config.FluidConfigurationProvider"/>
         <codeFoldingOptionsProvider instance="com.cedricziel.idea.fluid.config.FluidFoldingOptionsProvider"/>
         <fileIndentOptionsProvider implementation="com.cedricziel.idea.fluid.lang.psi.codeStyle.FluidFileIndentOptionsProvider"/>
