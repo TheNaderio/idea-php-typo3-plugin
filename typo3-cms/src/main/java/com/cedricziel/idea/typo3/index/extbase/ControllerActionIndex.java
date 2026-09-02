@@ -13,10 +13,10 @@ import com.intellij.util.io.KeyDescriptor;
 import com.jetbrains.php.lang.PhpFileType;
 import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
-import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.HashMap;
 
 public class ControllerActionIndex extends FileBasedIndexExtension<String, StubControllerAction> {
 
@@ -32,7 +32,7 @@ public class ControllerActionIndex extends FileBasedIndexExtension<String, StubC
     @Override
     public DataIndexer<String, StubControllerAction, FileContent> getIndexer() {
         return inputData -> {
-            Map<String, StubControllerAction> map = new THashMap<>();
+            Map<String, StubControllerAction> map = new HashMap<>();
 
             String extensionKeyFromFile = ExtensionUtility.findExtensionKeyFromFile(inputData.getFile());
             if (null != extensionKeyFromFile) {
@@ -80,7 +80,7 @@ public class ControllerActionIndex extends FileBasedIndexExtension<String, StubC
         final Map<String, StubControllerAction> map;
 
         ControllerActionRecursiveVisitor() {
-            this.map = new THashMap<>();
+            this.map = new HashMap<>();
         }
 
         public Map<String, StubControllerAction> getMap() {

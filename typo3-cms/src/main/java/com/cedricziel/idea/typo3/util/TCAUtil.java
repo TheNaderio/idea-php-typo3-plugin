@@ -12,7 +12,6 @@ import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.parser.PhpElementTypes;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
-import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -327,7 +326,7 @@ public class TCAUtil {
 
     @NotNull
     public static Set<String> getAvailableEvaluations(@NotNull Project project) {
-        Set<String> evaluations = new THashSet<>();
+        Set<String> evaluations = new HashSet<>();
         evaluations.addAll(Arrays.asList(TCA_V8_DEFAULT_EVALUATIONS));
 
         if (TYPO3Utility.compareMajorMinorVersion(project, "8.7") > 0) {

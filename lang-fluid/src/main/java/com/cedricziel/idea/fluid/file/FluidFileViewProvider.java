@@ -17,12 +17,12 @@ import com.intellij.psi.templateLanguages.TemplateDataLanguageMappings;
 import com.intellij.psi.templateLanguages.TemplateLanguage;
 import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
 import com.intellij.psi.tree.IElementType;
-import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Set;
+import java.util.HashSet;
 
 public class FluidFileViewProvider extends MultiplePsiFilesPerDocumentFileViewProvider implements TemplateLanguageFileViewProvider {
 
@@ -30,7 +30,7 @@ public class FluidFileViewProvider extends MultiplePsiFilesPerDocumentFileViewPr
     public static final IElementType TEMPLATE_DATA = new TemplateDataElementType("FluidTextElementType", FluidLanguage.INSTANCE, FluidTypes.TEXT, FLUID_FRAGMENT);
 
     private final Language myTemplateDataLanguage;
-    private THashSet<Language> languages = null;
+    private Set<Language> languages = null;
 
     public FluidFileViewProvider(PsiManager manager, VirtualFile file, boolean physical) {
         super(manager, file, physical);
@@ -79,7 +79,7 @@ public class FluidFileViewProvider extends MultiplePsiFilesPerDocumentFileViewPr
     public Set<Language> getLanguages() {
 
         if (languages == null) {
-            languages = new THashSet<>(Arrays.asList(FluidLanguage.INSTANCE, myTemplateDataLanguage));
+            languages = new HashSet<>(Arrays.asList(FluidLanguage.INSTANCE, myTemplateDataLanguage));
         }
 
         return languages;

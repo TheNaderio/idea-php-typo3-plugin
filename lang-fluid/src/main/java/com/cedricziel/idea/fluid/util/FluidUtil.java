@@ -27,7 +27,6 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.*;
 import com.jetbrains.php.lang.psi.visitors.PhpRecursiveElementVisitor;
-import gnu.trove.THashMap;
 import icons.FluidIcons;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -81,7 +80,7 @@ public class FluidUtil {
     }
 
     public static Map<String, FluidVariable> collectControllerVariables(FluidFile templateFile) {
-        Map<String, FluidVariable> collected = new THashMap<>();
+        Map<String, FluidVariable> collected = new HashMap<>();
         String controllerName = inferControllerNameFromTemplateFile(templateFile);
         String actionName = inferActionNameFromTemplateFile(templateFile);
 
@@ -225,7 +224,7 @@ public class FluidUtil {
     }
 
     private static class ControllerMethodWalkerVisitor extends PhpRecursiveElementVisitor {
-        private final Map<String, FluidVariable> variables = new THashMap<>();
+        private final Map<String, FluidVariable> variables = new HashMap<>();
 
         @Override
         public void visitPhpMethodReference(MethodReference reference) {

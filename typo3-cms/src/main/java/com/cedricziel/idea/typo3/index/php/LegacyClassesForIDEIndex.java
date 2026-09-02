@@ -12,12 +12,12 @@ import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import com.jetbrains.php.lang.psi.elements.ClassReference;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
-import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 public class LegacyClassesForIDEIndex extends FileBasedIndexExtension<String, String> {
 
@@ -50,7 +50,7 @@ public class LegacyClassesForIDEIndex extends FileBasedIndexExtension<String, St
     @Override
     public DataIndexer<String, String, FileContent> getIndexer() {
         return inputData -> {
-            Map<String, String> map = new THashMap<>();
+            Map<String, String> map = new HashMap<>();
 
             LegacyClassesRecursiveVisitor visitor = new LegacyClassesRecursiveVisitor();
             visitor.visitElement(inputData.getPsiFile());
@@ -93,7 +93,7 @@ public class LegacyClassesForIDEIndex extends FileBasedIndexExtension<String, St
         private final Map<String, String> map;
 
         LegacyClassesRecursiveVisitor() {
-            map = new THashMap<>();
+            map = new HashMap<>();
         }
 
         public Map<String, String> getMap() {

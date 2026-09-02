@@ -13,7 +13,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.xml.XmlElementDescriptor;
 import com.intellij.xml.util.XmlUtil;
-import gnu.trove.THashMap;
 import icons.FluidIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 public class ViewHelperUtil {
     @NotNull
@@ -71,10 +71,10 @@ public class ViewHelperUtil {
 
     @NotNull
     public static Map<String, ViewHelper> findAllViewHelpersInContextByName(@NotNull Project project, @NotNull PsiElement psiElement) {
-        Map<String, ViewHelper> elements = new THashMap<>();
+        Map<String, ViewHelper> elements = new HashMap<>();
 
-        Map<String, String> namespaces = new THashMap<>();
-        Map<String, Map<String, ViewHelper>> collectedViewHelpers = new THashMap<>();
+        Map<String, String> namespaces = new HashMap<>();
+        Map<String, Map<String, ViewHelper>> collectedViewHelpers = new HashMap<>();
         for (NamespaceProvider nsExt : NamespaceProvider.EP_NAME.getExtensions()) {
             Collection<FluidNamespace> fluidNamespaces = nsExt.provideForElement(psiElement);
             for (FluidNamespace ns : fluidNamespaces) {
@@ -83,7 +83,7 @@ public class ViewHelperUtil {
                 }
 
                 if (!collectedViewHelpers.containsKey(ns.namespace)) {
-                    collectedViewHelpers.put(ns.namespace, new THashMap<>());
+                    collectedViewHelpers.put(ns.namespace, new HashMap<>());
                 }
 
                 for (ViewHelperProvider vhExt : ViewHelperProvider.EP_NAME.getExtensions()) {

@@ -12,7 +12,6 @@ import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import com.jetbrains.php.lang.psi.elements.*;
-import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -43,7 +42,7 @@ public class RouteIndex extends FileBasedIndexExtension<String, RouteStub> {
     @Override
     public DataIndexer<String, RouteStub, FileContent> getIndexer() {
         return inputData -> {
-            Map<String, RouteStub> map = new THashMap<>();
+            Map<String, RouteStub> map = new HashMap<>();
 
             if (inputData.getFile().getName().equals("ext_tables.php")) {
                 ExtTablesRouteVisitor extTablesRouteVisitor = new ExtTablesRouteVisitor();

@@ -6,10 +6,10 @@ import com.intellij.util.indexing.*;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.KeyDescriptor;
-import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.HashMap;
 
 public class ExtensionNameStubIndex extends FileBasedIndexExtension<String, String> {
 
@@ -29,7 +29,7 @@ public class ExtensionNameStubIndex extends FileBasedIndexExtension<String, Stri
     @Override
     public DataIndexer<String, String, FileContent> getIndexer() {
         return virtualFile -> {
-            final Map<String, String> items = new THashMap<>();
+            final Map<String, String> items = new HashMap<>();
 
             VirtualFile file = virtualFile.getFile();
             VirtualFile parentDirectory = file.getParent();

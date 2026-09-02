@@ -14,7 +14,6 @@ import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.util.indexing.*;
 import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.KeyDescriptor;
-import gnu.trove.THashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -97,7 +96,7 @@ public class ResourcePathIndex extends ScalarIndexExtension<String> {
     @Override
     public DataIndexer<String, Void, FileContent> getIndexer() {
         return inputData -> {
-            Map<String, Void> map = new THashMap<>();
+            Map<String, Void> map = new HashMap<>();
 
             String path = inputData.getFile().getPath();
             if (path.contains("sysext") || path.contains("typo3conf/ext")) {

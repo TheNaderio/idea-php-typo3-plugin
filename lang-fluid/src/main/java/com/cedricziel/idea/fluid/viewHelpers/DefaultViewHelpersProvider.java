@@ -11,22 +11,22 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlText;
-import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.Map;
 import java.util.Objects;
+import java.util.HashMap;
 
 public class DefaultViewHelpersProvider implements ViewHelperProvider {
-    private static final Map<String, Map<String, ViewHelper>> myCache = new THashMap<>();
+    private static final Map<String, Map<String, ViewHelper>> myCache = new HashMap<>();
 
     @NotNull
     @Override
     public Map<String, ViewHelper> provideForNamespace(@NotNull Project project, @NotNull String namespace) {
         if (!namespace.equals("TYPO3/Fluid/ViewHelpers") && !namespace.isEmpty()) {
 
-            return new THashMap<>();
+            return new HashMap<>();
         }
 
         String schemaLocation = "/schemas/fluid/7.6.xsd";
@@ -64,7 +64,7 @@ public class DefaultViewHelpersProvider implements ViewHelperProvider {
     }
 
     private class ViewHelperSchemaRecursiveElementVisitor extends XmlRecursiveElementVisitor {
-        Map<String, ViewHelper> viewHelpers = new THashMap<>();
+        Map<String, ViewHelper> viewHelpers = new HashMap<>();
 
         @Override
         public void visitXmlTag(XmlTag tag) {

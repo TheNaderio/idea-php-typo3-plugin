@@ -20,7 +20,6 @@ import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement;
 import com.jetbrains.php.lang.psi.resolve.types.PhpType;
-import gnu.trove.THashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -255,7 +254,7 @@ public class FluidTypeResolver {
     @NotNull
     public static Map<String, FluidVariable> collectScopeVariables(@NotNull PsiElement psiElement, @NotNull Set<VirtualFile> visitedFiles) {
         Map<String, Set<String>> globalVars = new HashMap<>();
-        Map<String, FluidVariable> variables = new THashMap<>();
+        Map<String, FluidVariable> variables = new HashMap<>();
 
         VirtualFile virtualFile = psiElement.getContainingFile().getVirtualFile();
         if (visitedFiles.contains(virtualFile)) {

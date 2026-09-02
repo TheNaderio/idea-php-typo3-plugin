@@ -7,12 +7,12 @@ import com.intellij.util.indexing.*;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.KeyDescriptor;
-import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.HashMap;
 
 public class TablenameFileIndex extends FileBasedIndexExtension<String, TextRange> {
 
@@ -28,7 +28,7 @@ public class TablenameFileIndex extends FileBasedIndexExtension<String, TextRang
     @Override
     public DataIndexer<String, TextRange, FileContent> getIndexer() {
         return inputData -> {
-            Map<String, TextRange> map = new THashMap<>();
+            Map<String, TextRange> map = new HashMap<>();
 
             CharSequence charSequence = LoadTextUtil.loadText(inputData.getFile());
 

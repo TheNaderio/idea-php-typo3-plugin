@@ -10,7 +10,6 @@ import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.KeyDescriptor;
 import com.jetbrains.php.lang.PhpFileType;
 import com.jetbrains.php.lang.psi.PhpFile;
-import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -28,12 +27,12 @@ public class CoreServiceMapStubIndex extends FileBasedIndexExtension<String, Set
 
         return inputData -> {
 
-            final Map<String, Set<String>> map = new THashMap<>();
+            final Map<String, Set<String>> map = new HashMap<>();
 
             PsiFile psiFile = inputData.getPsiFile();
 
             if (psiFile instanceof PhpFile) {
-                Map<String, ArrayList<TYPO3ServiceDefinition>> serviceMap = new THashMap<>();
+                Map<String, ArrayList<TYPO3ServiceDefinition>> serviceMap = new HashMap<>();
                 psiFile.accept(new CoreServiceDefinitionParserVisitor(serviceMap));
 
                 serviceMap.forEach((serviceId, definitionList) -> {

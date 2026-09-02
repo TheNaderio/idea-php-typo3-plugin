@@ -1,6 +1,5 @@
 package com.cedricziel.idea.fluid.viewHelpers.model;
 
-import gnu.trove.THashMap;
 import icons.FluidIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -9,6 +8,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 public class ViewHelper {
     public final Map<String, ViewHelperArgument> arguments;
@@ -20,7 +20,7 @@ public class ViewHelper {
 
     public ViewHelper(@NotNull String name) {
         this.name = name;
-        this.arguments = new THashMap<>();
+        this.arguments = new HashMap<>();
         this.icon = FluidIcons.VIEW_HELPER;
     }
 

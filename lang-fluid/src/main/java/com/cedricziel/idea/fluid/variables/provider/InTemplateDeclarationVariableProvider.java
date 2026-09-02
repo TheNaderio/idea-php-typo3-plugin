@@ -22,7 +22,6 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ProcessingContext;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.resolve.types.PhpType;
-import gnu.trove.THashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -191,12 +190,12 @@ public class InTemplateDeclarationVariableProvider implements VariableProvider {
 
     private Map<String, FluidVariable> collectInlineViewHelperSetVariables(@NotNull PsiElement psiElement) {
         if (!containsLanguage(FluidLanguage.INSTANCE, psiElement)) {
-            return new THashMap<>();
+            return new HashMap<>();
         }
 
         PsiFile psi = extractLanguagePsiForElement(FluidLanguage.INSTANCE, psiElement);
         if (psi == null) {
-            return new THashMap<>();
+            return new HashMap<>();
         }
 
         InlineFVariableVisitor visitor = new InlineFVariableVisitor();
@@ -207,12 +206,12 @@ public class InTemplateDeclarationVariableProvider implements VariableProvider {
 
     private Map<String, FluidVariable> collectXmlViewHelperSetVariables(@NotNull PsiElement psiElement) {
         if (!containsLanguage(HTMLLanguage.INSTANCE, psiElement)) {
-            return new THashMap<>();
+            return new HashMap<>();
         }
 
         PsiFile psi = extractLanguagePsiForElement(HTMLLanguage.INSTANCE, psiElement);
         if (psi == null) {
-            return new THashMap<>();
+            return new HashMap<>();
         }
 
         XmlVariableVisitor visitor = new XmlVariableVisitor();
@@ -223,12 +222,12 @@ public class InTemplateDeclarationVariableProvider implements VariableProvider {
 
     private Map<String, FluidVariable> collectXmlMapViewHelperSetVariables(PsiElement psiElement) {
         if (!containsLanguage(HTMLLanguage.INSTANCE, psiElement)) {
-            return new THashMap<>();
+            return new HashMap<>();
         }
 
         PsiFile psi = extractLanguagePsiForElement(HTMLLanguage.INSTANCE, psiElement);
         if (psi == null) {
-            return new THashMap<>();
+            return new HashMap<>();
         }
 
         XmlFAliasVisitor visitor = new XmlFAliasVisitor();
@@ -238,7 +237,7 @@ public class InTemplateDeclarationVariableProvider implements VariableProvider {
     }
 
     private static class XmlVariableVisitor extends XmlRecursiveElementWalkingVisitor {
-        public Map<String, FluidVariable> variables = new THashMap<>();
+        public Map<String, FluidVariable> variables = new HashMap<>();
 
         @Override
         public void visitXmlTag(XmlTag tag) {
@@ -254,7 +253,7 @@ public class InTemplateDeclarationVariableProvider implements VariableProvider {
     }
 
     private static class XmlFAliasVisitor extends XmlRecursiveElementWalkingVisitor {
-        public Map<String, FluidVariable> variables = new THashMap<>();
+        public Map<String, FluidVariable> variables = new HashMap<>();
 
         @Override
         public void visitXmlTag(XmlTag tag) {
@@ -289,7 +288,7 @@ public class InTemplateDeclarationVariableProvider implements VariableProvider {
     }
 
     private static class InlineFVariableVisitor extends FluidRecursiveWalkingVisitor {
-        public Map<String, FluidVariable> variables = new THashMap<>();
+        public Map<String, FluidVariable> variables = new HashMap<>();
 
         @Override
         public void visitViewHelperExpr(@NotNull FluidViewHelperExpr o) {
