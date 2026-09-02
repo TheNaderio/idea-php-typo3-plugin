@@ -5,6 +5,13 @@
 ### Added
 
 ### Changed
+- Target PhpStorm 2026.2 (build 262); the plugins now require Java 25
+- Migrate the build to the IntelliJ Platform Gradle Plugin 2.x, Gradle 9.7.1 and the Kotlin DSL
+- Build against PhpStorm instead of IntelliJ IDEA Ultimate — the PHP, JavaScript, CSS, YAML and
+  Images plugins ship with it, so the separate PHP plugin version pin is gone
+- Generate lexers and parsers into `build/generated/sources` instead of `gen/`
+- Drop the `until-build` bound so the plugins stay installable across future IDE updates,
+  as recommended for platform 243 and later
 
 ### Deprecated
 

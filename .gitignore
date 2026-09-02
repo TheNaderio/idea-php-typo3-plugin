@@ -80,3 +80,5 @@ fabric.properties
 /lang-typoscript/build
 /lang-typoscript/gen
 public
+claude.log
+.intellijPlatform/
