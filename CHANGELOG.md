@@ -26,6 +26,8 @@
 - `GeneralUtility::makeInstanceService` type resolution no longer breaks in PhpStorm: the
   type provider claimed the same key as the bundled Pest plugin, which made PhpIndex reject
   both providers
+- `TranslationIndex.findAllKeys()` no longer reports translations whose file has been
+  deleted or moved
 
 ### Security
 

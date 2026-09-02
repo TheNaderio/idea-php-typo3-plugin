@@ -76,9 +76,19 @@ public class TranslationIndex extends ScalarIndexExtension<String> {
         return returnResult;
     };
 
+    /**
+     * getAllKeys() also reports keys whose file has since been deleted or moved - the index keeps
+     * them around until it is rebuilt. Drop those, so callers only see translations that still
+     * resolve to a file in the project.
+     */
     @NotNull
     public static Collection<String> findAllKeys(@NotNull Project project) {
-        return new HashSet<>(FileBasedIndex.getInstance().getAllKeys(TranslationIndex.KEY, project));
+        FileBasedIndex index = FileBasedIndex.getInstance();
+        GlobalSearchScope scope = GlobalSearchScope.allScope(project);
+
+        return index.getAllKeys(TranslationIndex.KEY, project).stream()
+            .filter(key -> !index.getContainingFiles(TranslationIndex.KEY, key, scope).isEmpty())
+            .collect(Collectors.toCollection(HashSet::new));
     }
 
     @NotNull
