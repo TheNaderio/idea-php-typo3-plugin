@@ -28,6 +28,10 @@
   both providers
 - `TranslationIndex.findAllKeys()` no longer reports translations whose file has been
   deleted or moved
+- The Generate ViewHelper/Controller/Entity/Action items work again: their actions
+  overrode `update()` without declaring an update thread, which the platform now rejects
+- Generating a Fluid Styled Content element no longer freezes the UI - it ran its file
+  generation synchronously on the EDT
 
 ### Security
 

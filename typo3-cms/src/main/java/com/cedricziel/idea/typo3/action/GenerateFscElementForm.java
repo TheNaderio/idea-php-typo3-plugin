@@ -7,7 +7,7 @@ import com.cedricziel.idea.typo3.util.Slugify;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -97,7 +97,7 @@ public class GenerateFscElementForm extends JDialog {
     }
 
     private void onGenerate() {
-        ApplicationManager.getApplication().runWriteAction(new Thread(this::generate));
+        WriteCommandAction.runWriteCommandAction(project, this::generate);
     }
 
     private void onCancel() {

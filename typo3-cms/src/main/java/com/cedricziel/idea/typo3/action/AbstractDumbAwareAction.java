@@ -1,15 +1,27 @@
 package com.cedricziel.idea.typo3.action;
 
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 abstract class AbstractDumbAwareAction extends DumbAwareAction {
     public AbstractDumbAwareAction(String create_viewHelper, String s, Icon typo3Icon) {
         super(create_viewHelper, s, typo3Icon);
+    }
+
+    /**
+     * Subclasses resolve PSI in {@link #update(AnActionEvent)} - the extension directory, the
+     * class at the caret - which is not allowed on the EDT. Declaring the update thread is
+     * mandatory for any action that overrides update().
+     */
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
     }
 
     /**
