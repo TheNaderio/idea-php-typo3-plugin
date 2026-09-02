@@ -25,9 +25,14 @@ import java.util.Set;
  */
 public class GeneralUtilityServiceTypeProvider extends AbstractServiceLocatorTypeProvider {
 
+    /**
+     * The key must be unique across every PHP type provider loaded in the IDE, including the
+     * plugins bundled with PhpStorm: a clash makes PhpIndex reject both providers. The previous
+     * key was given up because the bundled Pest plugin claims it.
+     */
     @Override
     public char getKey() {
-        return '\u0225';
+        return '\u0245';
     }
 
     @Nullable

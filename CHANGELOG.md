@@ -19,6 +19,9 @@
 ### Removed
 
 ### Fixed
+- `GeneralUtility::makeInstanceService` type resolution no longer breaks in PhpStorm: the
+  type provider claimed the same key as the bundled Pest plugin, which made PhpIndex reject
+  both providers
 
 ### Security
 
