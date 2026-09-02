@@ -4,6 +4,7 @@ import com.cedricziel.idea.typo3.IdeHelper;
 import com.cedricziel.idea.typo3.TYPO3CMSProjectSettings;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.startup.ProjectActivity;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.search.FilenameIndex;
@@ -29,7 +30,10 @@ public class TYPO3CMSPostStartupActivity implements ProjectActivity {
     public Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
         // Detection walks the VFS and queries an index - too slow for the EDT, and it needs the
         // indexes to be ready.
-        ReadAction.nonBlocking(() -> checkProject(project))
+        ReadAction.<Void>nonBlocking(() -> {
+                checkProject(project);
+                return null;
+            })
             .inSmartMode(project)
             .expireWith(project)
             .submit(AppExecutorUtil.getAppExecutorService());
@@ -54,7 +58,7 @@ public class TYPO3CMSPostStartupActivity implements ProjectActivity {
     }
 
     private boolean containsPluginRelatedFiles(@NotNull Project project) {
-        return (VfsUtil.findRelativeFile(project.getBaseDir(), "vendor", "typo3") != null)
+        return (VfsUtil.findRelativeFile(ProjectUtil.guessProjectDir(project), "vendor", "typo3") != null)
             || !FilenameIndex.getVirtualFilesByName("ext_emconf.php", GlobalSearchScope.allScope(project)).isEmpty();
     }
 }

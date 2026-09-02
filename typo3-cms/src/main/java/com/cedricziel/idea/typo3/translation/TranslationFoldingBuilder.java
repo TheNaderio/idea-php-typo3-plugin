@@ -22,7 +22,7 @@ public class TranslationFoldingBuilder extends FoldingBuilderEx {
     @Override
     public FoldingDescriptor @NotNull [] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
         if (!TYPO3CMSProjectSettings.isEnabled(root) || !TYPO3CMSProjectSettings.getInstance(root.getProject()).translationEnableTextFolding) {
-            return FoldingDescriptor.EMPTY;
+            return FoldingDescriptor.EMPTY_ARRAY;
         }
 
         FoldingGroup group = FoldingGroup.newGroup("TYPO3Translation");
@@ -49,7 +49,7 @@ public class TranslationFoldingBuilder extends FoldingBuilderEx {
             }
         }
 
-        return descriptors.toArray(FoldingDescriptor.EMPTY);
+        return descriptors.toArray(FoldingDescriptor.EMPTY_ARRAY);
     }
 
     @Nullable

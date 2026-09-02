@@ -5,7 +5,6 @@ import com.intellij.openapi.util.Key;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.*;
 import com.jetbrains.php.lang.parser.PhpElementTypes;
@@ -50,7 +49,7 @@ public class DeprecationUtility {
 
     public static Set<String> getDeprecatedClassConstants(@NotNull Project project) {
         Set<String> constants = new HashSet<>();
-        PsiFile[] classConstantMatcherFiles = FilenameIndex.getFilesByName(project, "ClassConstantMatcher.php", GlobalSearchScope.allScope(project));
+        PsiFile[] classConstantMatcherFiles = FilesystemUtil.findFilesByName(project, "ClassConstantMatcher.php");
         for (PsiFile file : classConstantMatcherFiles) {
             constants.addAll(CachedValuesManager.getManager(project).getCachedValue(
                 file,
@@ -86,7 +85,7 @@ public class DeprecationUtility {
     public static Set<String> getDeprecatedClassNames(@NotNull Project project) {
         Set<String> classNames = new HashSet<>();
 
-        PsiFile[] classNameMatcherFiles = FilenameIndex.getFilesByName(project, "ClassNameMatcher.php", GlobalSearchScope.allScope(project));
+        PsiFile[] classNameMatcherFiles = FilesystemUtil.findFilesByName(project, "ClassNameMatcher.php");
         for (PsiFile file : classNameMatcherFiles) {
             classNames.addAll(CachedValuesManager.getManager(project).getCachedValue(
                 file,
@@ -119,7 +118,7 @@ public class DeprecationUtility {
     public static Set<String> getDeprecatedConstantNames(@NotNull Project project) {
         Set<String> deprecatedConstants = new HashSet<>();
 
-        PsiFile[] constantMatcherFiles = FilenameIndex.getFilesByName(project, "ConstantMatcher.php", GlobalSearchScope.allScope(project));
+        PsiFile[] constantMatcherFiles = FilesystemUtil.findFilesByName(project, "ConstantMatcher.php");
         for (PsiFile file : constantMatcherFiles) {
 
             deprecatedConstants.addAll(CachedValuesManager.getManager(project).getCachedValue(
@@ -164,7 +163,7 @@ public class DeprecationUtility {
 
     public static Set<String> getDeprecatedGlobalFunctionCalls(@NotNull Project project) {
         Set<String> functionCallNames = new HashSet<>();
-        PsiFile[] constantMatcherFiles = FilenameIndex.getFilesByName(project, "FunctionCallMatcher.php", GlobalSearchScope.allScope(project));
+        PsiFile[] constantMatcherFiles = FilesystemUtil.findFilesByName(project, "FunctionCallMatcher.php");
         for (PsiFile file : constantMatcherFiles) {
 
             functionCallNames.addAll(CachedValuesManager.getManager(project).getCachedValue(

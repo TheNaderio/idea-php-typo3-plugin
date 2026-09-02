@@ -1,11 +1,11 @@
 package com.cedricziel.idea.typo3.codeInspection;
 
+import com.cedricziel.idea.typo3.util.PhpHierarchyUtil;
 import com.intellij.codeInspection.InspectionSuppressor;
 import com.intellij.codeInspection.SuppressQuickFix;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import org.jetbrains.annotations.NotNull;
@@ -40,9 +40,7 @@ public class UnusedActionControllerMethodInspectionSuppressor implements Inspect
 
     private boolean isControllerPhpClass(PhpClass classParent) {
 
-        return PhpIndex.getInstance(classParent.getProject())
-            .getAllSubclasses("TYPO3\\CMS\\Extbase\\Mvc\\Controller\\ControllerInterface")
-            .contains(classParent);
+        return PhpHierarchyUtil.isInstanceOf(classParent, "TYPO3\\CMS\\Extbase\\Mvc\\Controller\\ControllerInterface");
     }
 
     private boolean isActionMethod(PsiElement element) {

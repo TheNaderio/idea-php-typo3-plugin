@@ -5,7 +5,6 @@ import com.intellij.openapi.util.Key;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.*;
 import com.jetbrains.php.PhpIndex;
@@ -265,7 +264,7 @@ public class TCAUtil {
 
     private static Set<PsiElement> findAvailableRenderTypes(Project project) {
         PhpIndex phpIndex = PhpIndex.getInstance(project);
-        PsiFile[] extLocalConfFiles = FilenameIndex.getFilesByName(project, EXT_LOCALCONF_FILENAME, GlobalSearchScope.allScope(project));
+        PsiFile[] extLocalConfFiles = FilesystemUtil.findFilesByName(project, EXT_LOCALCONF_FILENAME);
         Collection<PhpClass> nodeRegistries = phpIndex.getClassesByFQN(NODE_FACTORY_CLASS);
 
         Set<PsiElement> elements = new HashSet<>();

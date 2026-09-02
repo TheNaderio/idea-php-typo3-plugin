@@ -5,7 +5,6 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
@@ -16,6 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -168,10 +169,12 @@ public class ExtensionFileGenerationUtil {
 
     @Nullable
     private static String getFileTemplateContent(@NotNull String filename) {
-        try {
-            return StreamUtil
-                    .readText(ExtensionFileGenerationUtil.class.getResourceAsStream(filename), "UTF-8")
-                    .replace("\r\n", "\n");
+        try (InputStream template = ExtensionFileGenerationUtil.class.getResourceAsStream(filename)) {
+            if (template == null) {
+                return null;
+            }
+
+            return new String(template.readAllBytes(), StandardCharsets.UTF_8).replace("\r\n", "\n");
         } catch (IOException e) {
             return null;
         }

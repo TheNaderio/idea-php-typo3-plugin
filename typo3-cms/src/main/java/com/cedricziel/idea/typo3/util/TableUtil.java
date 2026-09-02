@@ -8,7 +8,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
 import org.jetbrains.annotations.NotNull;
@@ -70,7 +69,7 @@ public class TableUtil {
 
     @NotNull
     private static PsiFile[] getExtTablesSqlFilesInProject(@NotNull Project project) {
-        return FilenameIndex.getFilesByName(project, EXT_TABLES_SQL_FILENAME, GlobalSearchScope.allScope(project));
+        return FilesystemUtil.findFilesByName(project, EXT_TABLES_SQL_FILENAME);
     }
 
     public static void completeAvailableTableNames(@NotNull Project project, @NotNull CompletionResultSet completionResultSet) {

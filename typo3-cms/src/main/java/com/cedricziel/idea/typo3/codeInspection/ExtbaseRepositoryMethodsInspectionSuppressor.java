@@ -1,5 +1,6 @@
 package com.cedricziel.idea.typo3.codeInspection;
 
+import com.cedricziel.idea.typo3.util.PhpHierarchyUtil;
 import com.intellij.codeInspection.InspectionSuppressor;
 import com.intellij.codeInspection.SuppressQuickFix;
 import com.intellij.patterns.PlatformPatterns;
@@ -42,9 +43,7 @@ public class ExtbaseRepositoryMethodsInspectionSuppressor implements InspectionS
     }
 
     private boolean isRepositoryClass(PhpClass containingClass) {
-        return PhpIndex.getInstance(containingClass.getProject())
-            .getAllSubclasses("TYPO3\\CMS\\Extbase\\Persistence\\RepositoryInterface")
-            .contains(containingClass);
+        return PhpHierarchyUtil.isInstanceOf(containingClass, "TYPO3\\CMS\\Extbase\\Persistence\\RepositoryInterface");
     }
 
     private boolean looksLikeRepositoryFinderMethod(PsiElement element) {

@@ -11,6 +11,9 @@
   Images plugins ship with it, so the separate PHP plugin version pin is gone
 - Generate lexers and parsers into `build/generated/sources` instead of `gen/`
 - Replace Commons Lang 2 with the platform-bundled Commons Lang 3
+- Clear out the deprecated platform APIs the Plugin Verifier flagged: file type factories,
+  code style and live template registration, list renderers, PHP element visitors, file
+  lookups and folding descriptors all move to their supported counterparts
 - Drop the `until-build` bound so the plugins stay installable across future IDE updates,
   as recommended for platform 243 and later
 - Indexes are no longer rebuilt wholesale after a plugin update; each index is rebuilt when
