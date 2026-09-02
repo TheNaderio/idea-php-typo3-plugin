@@ -9,7 +9,7 @@ import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.templateLanguages.TemplateDataLanguageMappings;
-import com.intellij.ui.ListCellRendererWrapper;
+import com.intellij.ui.SimpleListCellRenderer;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
@@ -104,12 +104,12 @@ public class FluidConfigurationPage implements SearchableConfigurable {
             model.addElement(language);
         }
 
-        myCommenterLanguage.setRenderer(new ListCellRendererWrapper() {
+        myCommenterLanguage.setRenderer(new SimpleListCellRenderer<Language>() {
             @Override
-            public void customize(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-                setText(value == null ? "" : ((Language) value).getDisplayName());
+            public void customize(@NotNull JList<? extends Language> list, Language value, int index, boolean selected, boolean hasFocus) {
+                setText(value == null ? "" : value.getDisplayName());
                 if (value != null) {
-                    final FileType type = ((Language) value).getAssociatedFileType();
+                    final FileType type = value.getAssociatedFileType();
                     if (type != null) {
                         setIcon(type.getIcon());
                     }

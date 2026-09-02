@@ -4,7 +4,6 @@ import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplateProvider;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -13,7 +12,7 @@ public class FluidPostfixTemplateProvider implements PostfixTemplateProvider {
     @NotNull
     @Override
     public Set<PostfixTemplate> getTemplates() {
-        return ContainerUtil.set(
+        return Set.of(
             new AliasPostfixTemplate(this),
             new ForEachPostfixTemplate(this),
             new DebugInlinePostfixTemplate(this)

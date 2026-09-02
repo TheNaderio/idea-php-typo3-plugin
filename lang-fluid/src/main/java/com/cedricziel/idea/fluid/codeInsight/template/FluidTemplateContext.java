@@ -7,7 +7,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class FluidTemplateContext extends TemplateContextType {
     protected FluidTemplateContext() {
-        super(FluidLanguage.INSTANCE.getID(), "Fluid Template");
+        // The context id lives in plugin.xml (contextId="FLUID") so the bundled live
+        // templates keep resolving; the constructor only takes the presentable name now.
+        super("Fluid Template");
     }
 
     @Override

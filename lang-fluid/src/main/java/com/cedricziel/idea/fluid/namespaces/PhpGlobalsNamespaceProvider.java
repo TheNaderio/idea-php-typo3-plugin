@@ -1,5 +1,6 @@
 package com.cedricziel.idea.fluid.namespaces;
 
+import com.cedricziel.idea.fluid.util.FluidUtil;
 import com.cedricziel.idea.fluid.extensionPoints.NamespaceProvider;
 import com.cedricziel.idea.fluid.tagMode.FluidNamespace;
 import com.intellij.openapi.project.Project;
@@ -7,12 +8,11 @@ import com.intellij.patterns.PlatformPatterns;
 import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.jetbrains.php.lang.parser.PhpElementTypes;
 import com.jetbrains.php.lang.psi.elements.*;
-import com.jetbrains.php.lang.psi.visitors.PhpRecursiveElementVisitor;
+import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class PhpGlobalsNamespaceProvider implements NamespaceProvider {
         List<FluidNamespace> namespaces = new ArrayList<>();
 
         Project project = element.getProject();
-        for (PsiFile psiFile : FilenameIndex.getFilesByName(project, "ext_localconf.php", GlobalSearchScope.allScope(project))) {
+        for (PsiFile psiFile : FluidUtil.findFilesByName(project, "ext_localconf.php")) {
             GlobalsNamespaceVisitor visitor = new GlobalsNamespaceVisitor();
             psiFile.accept(visitor);
 
@@ -36,8 +36,17 @@ public class PhpGlobalsNamespaceProvider implements NamespaceProvider {
         return namespaces;
     }
 
-    private class GlobalsNamespaceVisitor extends PhpRecursiveElementVisitor {
+    private class GlobalsNamespaceVisitor extends PhpElementVisitor {
         public List<FluidNamespace> namespaces = new ArrayList<>();
+
+        /**
+         * PhpRecursiveElementVisitor is deprecated; recursing explicitly is its replacement.
+         */
+        @Override
+        public void visitElement(@NotNull PsiElement element) {
+            super.visitElement(element);
+            element.acceptChildren(this);
+        }
 
         @Override
         public void visitPhpArrayIndex(ArrayIndex arrayIndex) {

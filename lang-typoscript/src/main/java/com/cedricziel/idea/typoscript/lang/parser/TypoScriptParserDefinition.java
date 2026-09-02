@@ -58,7 +58,8 @@ public class TypoScriptParserDefinition implements ParserDefinition {
     return new TypoScriptFile(viewProvider);
   }
 
-  public @NotNull SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
+  @Override
+  public @NotNull SpaceRequirements spaceExistenceTypeBetweenTokens(ASTNode left, ASTNode right) {
     return SpaceRequirements.MAY;
   }
 

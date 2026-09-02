@@ -12,7 +12,7 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.*;
-import com.jetbrains.php.lang.psi.visitors.PhpRecursiveElementVisitor;
+import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,6 +35,10 @@ public class PhpViewHelpersProvider implements ViewHelperProvider {
         String fqnPart = namespace.replace("/", "\\");
         PhpIndex phpIndex = PhpIndex.getInstance(project);
 
+        // getAllSubclasses is deprecated but has no successor: unlike the membership tests
+        // elsewhere, which walk a single class upwards instead, this genuinely needs to enumerate
+        // every ViewHelper in the project to offer them for completion.
+        @SuppressWarnings("deprecation")
         Collection<PhpClass> viewHelperClasses = phpIndex.getAllSubclasses("TYPO3Fluid\\Fluid\\Core\\ViewHelper\\ViewHelperInterface");
         for (PhpClass viewHelperPhpClass : viewHelperClasses) {
 
@@ -88,8 +92,17 @@ public class PhpViewHelpersProvider implements ViewHelperProvider {
         return StringUtils.join(parts, ".");
     }
 
-    private static class ViewHelperVisitor extends PhpRecursiveElementVisitor {
+    private static class ViewHelperVisitor extends PhpElementVisitor {
         Map<String, ViewHelperArgument> arguments = new HashMap<>();
+
+        /**
+         * PhpRecursiveElementVisitor is deprecated; recursing explicitly is its replacement.
+         */
+        @Override
+        public void visitElement(@NotNull PsiElement element) {
+            super.visitElement(element);
+            element.acceptChildren(this);
+        }
 
         @Override
         public void visitPhpMethodReference(MethodReference reference) {
@@ -146,9 +159,9 @@ public class PhpViewHelpersProvider implements ViewHelperProvider {
 
                 if (i == 3) {
                     if (p instanceof Constant) {
-                        argument.setRequired(StringUtils.equalsIgnoreCase(p.getText(), "true"));
+                        argument.setRequired("true".equalsIgnoreCase(p.getText()));
                     } else if (p instanceof ConstantReference) {
-                        argument.setRequired(StringUtils.equalsIgnoreCase(p.getText(), "true"));
+                        argument.setRequired("true".equalsIgnoreCase(p.getText()));
                     } else {
                         throwWithMessage("Can only process booleans for now as required arguments");
                     }

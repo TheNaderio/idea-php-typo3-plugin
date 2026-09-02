@@ -20,20 +20,35 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.*;
-import com.jetbrains.php.lang.psi.visitors.PhpRecursiveElementVisitor;
+import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor;
 import icons.FluidIcons;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class FluidUtil {
+    /**
+     * Replacement for the deprecated FilenameIndex.getFilesByName(Project, String, scope): the
+     * supported API hands back virtual files, while callers here work on PsiFiles.
+     */
+    public static Collection<PsiFile> findFilesByName(@NotNull Project project, @NotNull String name) {
+        PsiManager psiManager = PsiManager.getInstance(project);
+
+        return FilenameIndex.getVirtualFilesByName(name, GlobalSearchScope.allScope(project)).stream()
+            .map(psiManager::findFile)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+    }
+
     public static Map<String, FluidVariable> findVariablesInCurrentContext(@NotNull PsiElement element) {
         return FluidTypeResolver.collectScopeVariables(element);
     }
@@ -180,7 +195,7 @@ public class FluidUtil {
         }
 
         String controllerName = containingClass.getName().substring(0, containingClass.getName().length() - "Controller".length());
-        for (PsiFile psiFile : FilenameIndex.getFilesByName(method.getProject(), fileName + ".html", GlobalSearchScope.allScope(method.getProject()))) {
+        for (PsiFile psiFile : findFilesByName(method.getProject(), fileName + ".html")) {
             if (psiFile.getContainingDirectory().getName().equals(controllerName) && psiFile instanceof FluidFile) {
                 fluidFiles.add((FluidFile) psiFile);
             }
@@ -223,8 +238,17 @@ public class FluidUtil {
             .withInsertHandler(ViewHelperArgumentInsertHandler.getInstance());
     }
 
-    private static class ControllerMethodWalkerVisitor extends PhpRecursiveElementVisitor {
+    private static class ControllerMethodWalkerVisitor extends PhpElementVisitor {
         private final Map<String, FluidVariable> variables = new HashMap<>();
+
+        /**
+         * PhpRecursiveElementVisitor is deprecated; recursing explicitly is its replacement.
+         */
+        @Override
+        public void visitElement(@NotNull PsiElement element) {
+            super.visitElement(element);
+            element.acceptChildren(this);
+        }
 
         @Override
         public void visitPhpMethodReference(MethodReference reference) {

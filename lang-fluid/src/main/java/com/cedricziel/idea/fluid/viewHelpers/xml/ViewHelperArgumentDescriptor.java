@@ -84,7 +84,7 @@ public class ViewHelperArgumentDescriptor implements XmlAttributeDescriptor, Nam
 
     @NotNull
     @Override
-    public Object @NotNull [] getDependences() {
+    public Object @NotNull [] getDependencies() {
         return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
 

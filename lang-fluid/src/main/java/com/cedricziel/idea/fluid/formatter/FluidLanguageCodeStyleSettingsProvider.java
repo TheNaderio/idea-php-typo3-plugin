@@ -37,11 +37,10 @@ public class FluidLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
     }
 
     @Override
-    @NotNull
-    public CommonCodeStyleSettings getDefaultCommonSettings() {
-        CommonCodeStyleSettings styleSettings = new CommonCodeStyleSettings(this.getLanguage());
-        styleSettings.initIndentOptions();
-
-        return styleSettings;
+    protected void customizeDefaults(@NotNull CommonCodeStyleSettings commonSettings,
+                                     @NotNull CommonCodeStyleSettings.IndentOptions indentOptions) {
+        // The platform builds the defaults and hands them over for adjustment; the previous
+        // override only ensured indent options exist, which is now guaranteed.
+        super.customizeDefaults(commonSettings, indentOptions);
     }
 }

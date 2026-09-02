@@ -54,7 +54,7 @@
 
         <!-- live templates -->
         <defaultLiveTemplates file="/liveTemplates/Fluid.xml"/>
-        <liveTemplateContext implementation="com.cedricziel.idea.fluid.codeInsight.template.FluidTemplateContext"/>
+        <liveTemplateContext contextId="FLUID" implementation="com.cedricziel.idea.fluid.codeInsight.template.FluidTemplateContext"/>
 
         <!-- postfix completion -->
         <codeInsight.template.postfixTemplateProvider language="Fluid" implementationClass="com.cedricziel.idea.fluid.codeInsight.template.postfix.templates.FluidPostfixTemplateProvider"/>

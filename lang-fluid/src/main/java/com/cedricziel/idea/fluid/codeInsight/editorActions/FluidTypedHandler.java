@@ -10,7 +10,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import com.intellij.application.options.CodeStyle;
 import org.jetbrains.annotations.NotNull;
 
 public class FluidTypedHandler extends TypedHandlerDelegate {
@@ -67,7 +67,7 @@ public class FluidTypedHandler extends TypedHandlerDelegate {
     }
 
     private static boolean isWhitespaceRequired(Project project, char c) {
-        CodeStyleSettings settings = CodeStyleSettingsManager.getInstance(project).getCurrentSettings();
+        CodeStyleSettings settings = CodeStyle.getSettings(project);
         FluidCodeStyleSettings options = settings.getCustomSettings(FluidCodeStyleSettings.class);
 
         switch(c) {
