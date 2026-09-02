@@ -1,60 +1,42 @@
-# GitHub Actions Workflow created for handling the release process based on the draft release prepared
-# with the Build workflow. Running the publishPlugin task requires the PUBLISH_TOKEN secret provided.
+# Handles the release process based on the draft release prepared by the Build workflow.
+# Running the publishPlugin task requires the PUBLISH_TOKEN secret.
 
 name: Release
+
 on:
   release:
     types: [ prereleased, released ]
 
-jobs:
+permissions:
+  contents: read
 
-  # Prepare and publish the plugin to the Marketplace repository
+env:
+  JAVA_VERSION: "25"
+
+jobs:
+  # Prepare and publish the plugins to the Marketplace
   release:
     name: Publish Plugin
     runs-on: ubuntu-latest
 
-    env:
-      ORG_GRADLE_PROJECT_ideaVersion: "${{ matrix.idea_version }}"
-      ORG_GRADLE_PROJECT_phpPluginVersion: "${{ matrix.php_plugin_version }}"
-      ORG_GRADLE_PROJECT_psiViewerPluginVersion: "${{ matrix.psi_viewer_plugin_version }}"
-      ORG_GRADLE_PROJECT_grammarKitPluginVersion: "${{ matrix.grammar_kit_plugin_version }}"
-      ORG_GRADLE_PROJECT_customSinceBuild: "${{ matrix.since_build }}"
-      ORG_GRADLE_PROJECT_customUntilBuild: "${{ matrix.until_build }}"
-
-    strategy:
-      matrix:
-        include:
-          - idea_version: "IU-2022.3"
-            php_plugin_version: "223.7571.231"
-            psi_viewer_plugin_version: "223-SNAPSHOT"
-            grammar_kit_plugin_version: "2021.2.2"
-            since_build: "223"
-            until_build: "223.*"
-          - idea_version: "IU-2023.1"
-            php_plugin_version: "231.8109.199"
-            psi_viewer_plugin_version: "231-SNAPSHOT"
-            grammar_kit_plugin_version: "2021.2.2"
-            since_build: "231"
-            until_build: "231.*"
     outputs:
       prefixed-version: ${{ steps.properties.outputs.prefixed-version }}
 
     steps:
-
-      # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.release.tag_name }}
 
-      # Setup Java 11 environment for the next steps
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
-          distribution: zulu
-          java-version: 17
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
 
-      # Set environment variables
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
       - name: Export Properties
         id: properties
         shell: bash
@@ -62,54 +44,53 @@ jobs:
           PROPERTIES="$(./gradlew properties --console=plain -q)"
           VERSION="$(echo "$PROPERTIES" | grep "^pluginVersion:" | cut -f2- -d ' ')"
           CUSTOM_SINCE_BUILD="$(echo "$PROPERTIES" | grep "^customSinceBuild:" | cut -f2- -d ' ')"
-          PREFIXED_VERSION="$(echo ${CUSTOM_SINCE_BUILD}${VERSION:1})"
 
-          echo "::set-output name=prefixed-version::$PREFIXED_VERSION"
+          echo "prefixed-version=${CUSTOM_SINCE_BUILD}${VERSION:1}" >> "$GITHUB_OUTPUT"
 
-      # Publish the plugin to the Marketplace
       - name: Publish Plugin
         env:
           PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+          ORG_GRADLE_PROJECT_pluginVersion: ${{ steps.properties.outputs.prefixed-version }}
         shell: bash
         run: |
-          # Set output from previous step
-          export "ORG_GRADLE_PROJECT_pluginVersion=${{ steps.properties.outputs.prefixed-version }}"
+          ./gradlew :typo3-cms:publishPlugin :lang-fluid:publishPlugin :lang-typoscript:publishPlugin
 
-          ./gradlew :typo3-cms:patchChangelog :typo3-cms:publishPlugin :lang-fluid:publishPlugin :lang-typoscript:publishPlugin
-
-  # Patch changelog, commit and push to the current repository
+  # Move the [Unreleased] section of the changelog into a released one, then push it back
   changelog:
     name: Update Changelog
     needs: release
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
     steps:
-
-      # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: master
 
-      # Setup Java 11 environment for the next steps
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
-          distribution: zulu
-          java-version: 17
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
 
-      # Update Unreleased section with the current version
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # patchChangelog lives on the root project - the changelog plugin is applied there only
       - name: Patch Changelog
-        run: ./gradlew :typo3-cms:patchChangelog
+        run: ./gradlew :patchChangelog
 
-      # Commit patched Changelog
-      - name: Commit files
+      - name: Commit and Push
         run: |
+          if git diff --quiet -- CHANGELOG.md; then
+            echo "CHANGELOG.md unchanged, nothing to push."
+            exit 0
+          fi
+
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git commit -m "Update changelog" -a
-      # Push changes
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          branch: master
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          git commit -m "Update changelog" -- CHANGELOG.md
+          git push origin HEAD:master
