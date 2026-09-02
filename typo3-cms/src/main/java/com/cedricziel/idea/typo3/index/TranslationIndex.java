@@ -17,7 +17,6 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlElementType;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.*;
 import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.KeyDescriptor;
@@ -101,7 +100,7 @@ public class TranslationIndex extends ScalarIndexExtension<String> {
 
         FileBasedIndex.getInstance().getFilesWithKey(
             TranslationIndex.KEY,
-            ContainerUtil.set(id),
+            Set.of(id),
             v -> {
                 String languageKey = extractLanguageKeyFromFile(v);
                 PsiFile psiFile = PsiManager.getInstance(project).findFile(v);

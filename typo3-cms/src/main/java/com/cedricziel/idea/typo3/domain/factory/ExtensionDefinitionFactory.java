@@ -4,8 +4,6 @@ import com.cedricziel.idea.typo3.domain.TYPO3ExtensionDefinition;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
-import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import com.jetbrains.php.composer.ComposerConfigUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,11 +14,11 @@ import static com.cedricziel.idea.typo3.domain.TYPO3ExtensionDefinition.COMPOSER
 
 public class ExtensionDefinitionFactory {
 
-    public static TYPO3ExtensionDefinition fromDirectory(VirtualDirectoryImpl virtualDirectory) {
+    public static TYPO3ExtensionDefinition fromDirectory(VirtualFile virtualDirectory) {
         TYPO3ExtensionDefinition extensionDefinition = null;
 
         // try finding composer manifest
-        VirtualFileSystemEntry composerManifest = virtualDirectory.findChild("composer.json");
+        VirtualFile composerManifest = virtualDirectory.findChild("composer.json");
         if (composerManifest != null) {
             try {
                 extensionDefinition = fromComposerManifest(composerManifest);

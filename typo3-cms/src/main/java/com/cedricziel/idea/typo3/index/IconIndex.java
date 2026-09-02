@@ -4,7 +4,8 @@ import com.cedricziel.idea.typo3.icons.IconStub;
 import com.cedricziel.idea.typo3.index.externalizer.ObjectStreamDataExternalizer;
 import com.cedricziel.idea.typo3.psi.visitor.CoreFlagParserVisitor;
 import com.cedricziel.idea.typo3.psi.visitor.CoreIconParserVisitor;
-import com.intellij.openapi.file.exclude.OverrideFileTypeManager;
+import com.intellij.openapi.fileTypes.FileTypeRegistry;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.patterns.PlatformPatterns;
@@ -22,7 +23,6 @@ import com.jetbrains.php.lang.psi.PhpPsiUtil;
 import com.jetbrains.php.lang.psi.elements.Field;
 import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
-import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -43,7 +43,7 @@ public class IconIndex extends FileBasedIndexExtension<String, IconStub> {
         Set<String> identifiers = new HashSet<>();
         identifiers.add(iconIdentifier);
 
-        Map<VirtualFile, IconStub> icons = new THashMap<>();
+        Map<VirtualFile, IconStub> icons = new HashMap<>();
 
         FileBasedIndex.getInstance().getFilesWithKey(KEY, identifiers, virtualFile -> {
             FileBasedIndex.getInstance().processValues(KEY, iconIdentifier, virtualFile, (file, value) -> {
@@ -98,7 +98,7 @@ public class IconIndex extends FileBasedIndexExtension<String, IconStub> {
     @Override
     public DataIndexer<String, IconStub, FileContent> getIndexer() {
         return inputData -> {
-            Map<String, IconStub> map = new THashMap<>();
+            Map<String, IconStub> map = new HashMap<>();
 
             // index the icon registry
             if (inputData.getPsiFile() instanceof PhpFile) {
@@ -158,7 +158,8 @@ public class IconIndex extends FileBasedIndexExtension<String, IconStub> {
 
     @Override
     public int getVersion() {
-        return 0;
+        // 1: input filter no longer consults OverrideFileTypeManager
+        return 1;
     }
 
     @NotNull
@@ -166,15 +167,13 @@ public class IconIndex extends FileBasedIndexExtension<String, IconStub> {
     public FileBasedIndex.InputFilter getInputFilter() {
         return file -> {
             String extension = file.getExtension();
-
-            final OverrideFileTypeManager overrideFileTypeManager = OverrideFileTypeManager.getInstance();
-            if (overrideFileTypeManager == null) {
-                return extension != null && extension.equalsIgnoreCase("php");
+            if (extension == null || !extension.equalsIgnoreCase("php")) {
+                return false;
             }
 
-            boolean isEnforcedPlaintext = overrideFileTypeManager.isMarkedPlainText(file);
-
-            return extension != null && extension.equalsIgnoreCase("php") && !isEnforcedPlaintext;
+            // A user can override a single file's type to plain text; the effective file type
+            // reflects that, so there is no need to consult OverrideFileTypeManager directly.
+            return !(FileTypeRegistry.getInstance().getFileTypeByFile(file) instanceof PlainTextFileType);
         };
     }
 

@@ -3,7 +3,6 @@ package com.cedricziel.idea.typo3.psi;
 import com.cedricziel.idea.typo3.domain.TYPO3ExtensionDefinition;
 import com.cedricziel.idea.typo3.domain.factory.ExtensionDefinitionFactory;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import com.intellij.psi.PsiDirectory;
 
 public class TYPO3ExtensionUtil {
@@ -15,7 +14,7 @@ public class TYPO3ExtensionUtil {
      */
     public static TYPO3ExtensionDefinition findContainingExtension(PsiDirectory[] directories) {
         for (PsiDirectory directory : directories) {
-            VirtualDirectoryImpl virtualFile = (VirtualDirectoryImpl) directory.getVirtualFile();
+            VirtualFile virtualFile = directory.getVirtualFile();
 
             while (!isExtensionRootDirectory(virtualFile)) {
                 if (virtualFile.getParent() == null) {
@@ -41,7 +40,7 @@ public class TYPO3ExtensionUtil {
      * @param virtualFile Directory to scan
      * @return true if the current directory is a root directory.
      */
-    private static boolean isExtensionRootDirectory(VirtualDirectoryImpl virtualFile) {
+    private static boolean isExtensionRootDirectory(VirtualFile virtualFile) {
         VirtualFile[] immediateChildren = virtualFile.getChildren();
         for (VirtualFile file : immediateChildren) {
             if (file.getName().equals("ext_emconf.php")) {
