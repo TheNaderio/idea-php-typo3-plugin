@@ -64,7 +64,7 @@ public class TCACompletionContributor extends CompletionContributor {
                         result.addElement(LookupElementBuilder.create(evaluationName).withIcon(TYPO3CMSIcons.TYPO3_ICON));
                     }
 
-                    int lastIndexOf = StringUtils.lastIndexOf(literalExpression.getContents(), ",");
+                    int lastIndexOf = literalExpression.getContents().lastIndexOf(",");
                     if (lastIndexOf != -1 && literalExpression.getContents().length() == lastIndexOf + 1) {
                         for (String evaluationName : TCAUtil.getAvailableEvaluations(parameters.getPosition().getProject())) {
                             LookupElementBuilder element = LookupElementBuilder.create(literalExpression.getContents() + evaluationName)

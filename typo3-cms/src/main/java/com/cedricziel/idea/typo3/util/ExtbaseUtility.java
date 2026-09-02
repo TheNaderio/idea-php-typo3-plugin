@@ -12,7 +12,11 @@ public class ExtbaseUtility {
     public static final String CONTROLLER_BASE_CLASS = "\\TYPO3\\CMS\\Extbase\\Mvc\\Controller\\ActionController";
 
     public static String convertRepositoryFQNToEntityFQN(@NotNull String repositoryClassFQN) {
-        return StringUtils.stripStart(StringUtils.replace(StringUtils.replace(repositoryClassFQN, "\\Domain\\Repository", "\\Domain\\Model"), "Repository", ""), "\\");
+        return StringUtils.stripStart(
+            repositoryClassFQN
+                .replace("\\Domain\\Repository", "\\Domain\\Model")
+                .replace("Repository", ""),
+            "\\");
     }
 
     public static boolean isActionController(@NotNull PhpClass containingClass) {

@@ -11,7 +11,6 @@ import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiModificationTracker;
-import org.apache.commons.lang3.text.WordUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,7 +97,23 @@ public class JavaScriptUtil {
     }
 
     @NotNull
+    /**
+     * Turns an extension key into its JavaScript module spelling: "my_magic" -> "MyMagic".
+     */
     public static String normalizeExtensionKeyForJs(@NotNull String extensionKey) {
-        return WordUtils.capitalizeFully(extensionKey, new char[]{'_'}).replaceAll("_", "");
+        StringBuilder normalized = new StringBuilder(extensionKey.length());
+        boolean capitalizeNext = true;
+
+        for (char c : extensionKey.toCharArray()) {
+            if (c == '_') {
+                capitalizeNext = true;
+                continue;
+            }
+
+            normalized.append(capitalizeNext ? Character.toUpperCase(c) : Character.toLowerCase(c));
+            capitalizeNext = false;
+        }
+
+        return normalized.toString();
     }
 }
