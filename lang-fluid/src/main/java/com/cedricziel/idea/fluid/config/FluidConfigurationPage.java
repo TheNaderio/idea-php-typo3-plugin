@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -95,7 +96,9 @@ public class FluidConfigurationPage implements SearchableConfigurable {
 
     private void resetCommentLanguageCombo(@NotNull Language commentLanguage) {
         final DefaultComboBoxModel model = (DefaultComboBoxModel) myCommenterLanguage.getModel();
-        final List<Language> languages = TemplateDataLanguageMappings.getTemplateableLanguages();
+        // getTemplateableLanguages() hands back an immutable list, so it has to be copied before
+        // Fluid is appended - otherwise building this page dies with an UnsupportedOperationException.
+        final List<Language> languages = new ArrayList<>(TemplateDataLanguageMappings.getTemplateableLanguages());
 
         languages.add(FluidLanguage.INSTANCE);
 

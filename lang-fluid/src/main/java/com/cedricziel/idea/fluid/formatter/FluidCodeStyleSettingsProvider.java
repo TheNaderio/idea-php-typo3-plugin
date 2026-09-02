@@ -3,6 +3,7 @@ package com.cedricziel.idea.fluid.formatter;
 import com.cedricziel.idea.fluid.codeStyle.FluidCodeStyleSettings;
 import com.cedricziel.idea.fluid.lang.FluidLanguage;
 import com.intellij.application.options.CodeStyleAbstractConfigurable;
+import com.intellij.lang.Language;
 import com.intellij.application.options.CodeStyleAbstractPanel;
 import com.intellij.application.options.TabbedLanguageCodeStylePanel;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
@@ -22,6 +23,16 @@ public class FluidCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
     @Override
     public String getConfigurableDisplayName() {
         return "Fluid";
+    }
+
+    /**
+     * Without this the platform derives the configurable id from the localizable display name and
+     * logs an error for it. Returning the language gives it a stable, language-based id.
+     */
+    @Nullable
+    @Override
+    public Language getLanguage() {
+        return FluidLanguage.INSTANCE;
     }
 
     @NotNull
