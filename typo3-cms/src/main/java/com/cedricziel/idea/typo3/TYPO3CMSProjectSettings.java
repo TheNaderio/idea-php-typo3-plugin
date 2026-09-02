@@ -1,6 +1,7 @@
 package com.cedricziel.idea.typo3;
 
-import com.intellij.ide.actions.ShowSettingsUtilImpl;
+import com.cedricziel.idea.typo3.configuration.TYPO3CMSSettingsForm;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -37,7 +38,7 @@ public class TYPO3CMSProjectSettings implements PersistentStateComponent<TYPO3CM
 
     public static TYPO3CMSProjectSettings getInstance(@NotNull Project project) {
 
-        return ServiceManager.getService(project, TYPO3CMSProjectSettings.class);
+        return project.getService(TYPO3CMSProjectSettings.class);
     }
 
     public static boolean isEnabled(@NotNull PsiElement element) {
@@ -56,7 +57,7 @@ public class TYPO3CMSProjectSettings implements PersistentStateComponent<TYPO3CM
     }
 
     public static void showSettings(@NotNull Project project) {
-        ShowSettingsUtilImpl.showSettingsDialog(project, "TYPO3CMS.SettingsForm", null);
+        ShowSettingsUtil.getInstance().showSettingsDialog(project, TYPO3CMSSettingsForm.class);
     }
 
     public static String[] getAvailableLocales() {
