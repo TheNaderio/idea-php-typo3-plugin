@@ -44,6 +44,11 @@ foojay toolchain resolver, so Gradle provisions a matching JDK if the launcher J
 ./gradlew printProductsReleases       # the IDE builds verifyPlugin will run against
 ```
 
+> **Never run a Gradle build while `runIde` is up.** The sandbox IDE starts with
+> `idea.auto.reload.plugins=true`, so a build rewrites the plugin jars underneath the running
+> classloader and the IDE then floods its log with `ClassNotFoundException` for plugin classes
+> that are perfectly fine. It looks exactly like a broken plugin. Close the IDE first.
+
 > **The test sandbox is not under `build/`.** IPGP 2.x keeps it in
 > `.intellijPlatform/sandbox/<module>/PS-<version>/`, so `gradle clean` does **not** reset it and
 > the `FileBasedIndex` under `system-test/index/` survives across runs. Tests that assert on
