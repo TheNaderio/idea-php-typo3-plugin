@@ -34,6 +34,8 @@
   overrode `update()` without declaring an update thread, which the platform now rejects
 - Generating a Fluid Styled Content element no longer freezes the UI - it ran its file
   generation synchronously on the EDT
+- Opening a project no longer stalls the UI while the plugin checks whether it is a TYPO3
+  installation, and the startup activities no longer log a platform error on every start
 
 ### Security
 

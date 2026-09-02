@@ -2,34 +2,39 @@ package com.cedricziel.idea.typo3.startup;
 
 import com.cedricziel.idea.typo3.IdeHelper;
 import com.cedricziel.idea.typo3.TYPO3CMSProjectSettings;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupActivity;
+import com.intellij.openapi.startup.ProjectActivity;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.util.concurrency.AppExecutorUtil;
+import kotlin.Unit;
+import kotlin.coroutines.Continuation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class TYPO3CMSPostStartupActivity implements StartupActivity {
-    @Override
-    public void runActivity(@NotNull Project project) {
-        ApplicationManager.getApplication().runReadAction(() -> {
-            doRunActivity(project);
-        });
-    }
+/**
+ * Offers to enable the plugin when the opened project looks like a TYPO3 installation.
+ *
+ * <p>Implemented as a {@link ProjectActivity} because the platform rejects the older
+ * StartupActivity. Its {@code execute} is a Kotlin suspending function, which from Java means
+ * taking a {@link Continuation} and returning {@link Unit#INSTANCE} to signal "finished without
+ * suspending".
+ */
+public class TYPO3CMSPostStartupActivity implements ProjectActivity {
 
-    /*
-     * This used to compare the running plugin version against the last one seen and rebuild every
-     * index whenever it changed. Reading one's own plugin version needs a plugin descriptor, and
-     * every route to one is @ApiStatus.Internal as of 2026.2.
-     *
-     * The platform already covers the case: bumping an index's getVersion() discards and rebuilds
-     * exactly that index. So changing an indexer means bumping its getVersion() - blanket rebuilds
-     * on every plugin update are neither necessary nor cheap.
-     */
-    protected void doRunActivity(@NotNull Project project) {
-        this.checkProject(project);
+    @Nullable
+    @Override
+    public Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
+        // Detection walks the VFS and queries an index - too slow for the EDT, and it needs the
+        // indexes to be ready.
+        ReadAction.nonBlocking(() -> checkProject(project))
+            .inSmartMode(project)
+            .expireWith(project)
+            .submit(AppExecutorUtil.getAppExecutorService());
+
+        return Unit.INSTANCE;
     }
 
     public boolean isEnabled(@Nullable Project project) {
@@ -50,6 +55,6 @@ public class TYPO3CMSPostStartupActivity implements StartupActivity {
 
     private boolean containsPluginRelatedFiles(@NotNull Project project) {
         return (VfsUtil.findRelativeFile(project.getBaseDir(), "vendor", "typo3") != null)
-            || FilenameIndex.getVirtualFilesByName("ext_emconf.php", GlobalSearchScope.allScope(project)).size() > 0;
+            || !FilenameIndex.getVirtualFilesByName("ext_emconf.php", GlobalSearchScope.allScope(project)).isEmpty();
     }
 }
